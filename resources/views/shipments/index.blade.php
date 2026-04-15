@@ -56,12 +56,20 @@
         display: inline-block;
     }
 
-    .active {
-        background: #4CAF50;
+    .status-unassigned {
+        background: gray;
     }
 
-    .inactive {
-        background: #f44336;
+    .status-completed {
+        background: green;
+    }
+
+    .status-problem {
+        background: red;
+    }
+
+    .status-in_progress {
+        background: orange;
     }
 
     .details {
@@ -79,7 +87,8 @@
 
 <div class="container">
 
-    @foreach($shipments as $shipment)
+   @foreach($shipments as $shipment)
+    <a href="{{ route('shipments.show', $shipment->id) }}" style="text-decoration: none; color: inherit;">
         <div class="card">
 
             <div class="title">{{ $shipment->title }}</div>
@@ -101,7 +110,7 @@
             <div class="info">
                 <span class="label">Status:</span>
                 <span class="status {{ $shipment->status }}">
-                    {{ $shipment->status }}
+                    {{ $shipment->status ?? 'N/A' }}
                 </span>
             </div>
 
@@ -114,7 +123,8 @@
             </div>
 
         </div>
-    @endforeach
+    </a>
+@endforeach
 
 </div>
 

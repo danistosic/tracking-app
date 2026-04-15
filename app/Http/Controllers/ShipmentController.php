@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Shipment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\NewShipmentRequest;
 
 class ShipmentController extends Controller
 {
@@ -23,15 +24,17 @@ class ShipmentController extends Controller
      */
     public function create()
     {
-        //
+        return view('shipments.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(NewShipmentRequest $request)
     {
-        //
+        Shipment::create($request->validated());
+
+        return redirect()->route('shipments.index');
     }
 
     /**
@@ -39,7 +42,7 @@ class ShipmentController extends Controller
      */
     public function show(Shipment $shipment)
     {
-        //
+        return view('shipments.show', compact('shipment'));
     }
 
     /**
