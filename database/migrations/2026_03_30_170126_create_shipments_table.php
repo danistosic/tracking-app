@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('status')->default('pending');
 
             // povezivanje s korisnikom
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
 
             // dodatni opis
             $table->text('details')->nullable();

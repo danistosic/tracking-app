@@ -47,7 +47,7 @@
     <div class="form-container">
         <h2>Create New Shipment</h2>
 
-        <form action="{{ route('shipments.store') }}" method="POST">
+        <form action="{{ route('shipments.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             @if ($errors->any())
@@ -102,9 +102,10 @@
             </div>
 
             <div class="form-group">
-                <label>User ID</label>
-                <input type="number" name="user_id" value="{{ old('user_id') }}">
+                <label for="documents">Documents</label>
+                <input type="file" name="documents[]" multiple required>
             </div>
+
 
             <div class="form-group">
                 <label>Details</label>

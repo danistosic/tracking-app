@@ -27,8 +27,10 @@ class NewShipmentRequest extends FormRequest
             'to_country' => 'required|string|max:64',
             'price' => 'required|integer|min:0',
             'status' => 'required|in:in_progress,unassigned,completed,problem',
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'nullable|exists:users,id',
             'details' => 'required|string',
+            'documents' => 'required|array',
+            'documents.*' => 'file|mimes:jpg,jpeg,png,webp,pdf,doc,docx|max:10240',
         ];
     }
 }
