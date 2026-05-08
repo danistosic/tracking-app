@@ -2,22 +2,17 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\UserClient;
+use App\Rules\UserTrucker;
+use Illuminate\Foundation\Http\FormRequest;
 
-class NewShipmentRequest extends FormRequest
+class UpdateShipmentRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return true; 
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
     public function rules(): array
     {
         return [
@@ -28,10 +23,8 @@ class NewShipmentRequest extends FormRequest
             'to_country' => 'required|string|max:64',
             'price' => 'required|integer|min:0',
             'status' => 'required|in:in_progress,unassigned,completed,problem',
-            'user_id' => 'nullable|exists:users,id',
             'details' => 'required|string',
-            'documents' => 'required|array',
-            'documents.*' => 'file|mimes:jpg,jpeg,png,webp,pdf,doc,docx|max:10240',
+            'user_id' => ['required', new UserTrucker()],
             'client_id' => ['required', new UserClient()],
         ];
     }

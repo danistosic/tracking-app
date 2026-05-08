@@ -39,19 +39,21 @@
             cursor: pointer;
         }
 
-        button:hover {
-            background: #45a049;
+        .error {
+            color: red;
+            margin-bottom: 20px;
         }
     </style>
 
     <div class="form-container">
-        <h2>Create New Shipment</h2>
+        <h2>Edit Shipment</h2>
 
-        <form action="{{ route('shipments.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('shipments.update', $shipment->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
 
             @if ($errors->any())
-                <div style="color:red; margin-bottom:20px;">
+                <div class="error">
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -62,32 +64,55 @@
 
             <div class="form-group">
                 <label>Title</label>
-                <input type="text" name="title" value="{{ old('title') }}" required>
+                <input type="text" name="title" value="{{ old('title', $shipment->title) }}" required>
             </div>
 
             <div class="form-group">
                 <label>From City</label>
-                <input type="text" name="from_city" value="{{ old('from_city') }}">
+                <input type="text" name="from_city" value="{{ old('from_city', $shipment->from_city) }}">
             </div>
 
             <div class="form-group">
                 <label>From Country</label>
-                <input type="text" name="from_country" value="{{ old('from_country') }}">
+                <input type="text" name="from_country" value="{{ old('from_country', $shipment->from_country) }}">
             </div>
 
             <div class="form-group">
                 <label>To City</label>
-                <input type="text" name="to_city" value="{{ old('to_city') }}">
+                <input type="text" name="to_city" value="{{ old('to_city', $shipment->to_city) }}">
             </div>
 
             <div class="form-group">
                 <label>To Country</label>
-                <input type="text" name="to_country" value="{{ old('to_country') }}">
+                <input type="text" name="to_country" value="{{ old('to_country', $shipment->to_country) }}">
             </div>
 
             <div class="form-group">
                 <label>Price ($)</label>
-                <input type="number" name="price" value="{{ old('price') }}">
+                <input type="number" name="price" value="{{ old('price', $shipment->price) }}">
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+
+                <div class="form-group">
+                    @if ($errors->has('user_id'))
+                        <p style="color: red;">{{ $errors->first('user_id') }}</p>
+                    @endif
+
+                    <label for="user_id">Trucker ID</label>
+                    <input type="number" name="user_id" value="{{ old('user_id', $shipment->user_id) }}" min="0"
+                        required>
+                </div>
+
+                <select name="status" required>
+                    @foreach (\App\Models\Shipment::ALLOWED_STATUSES as $status)
+                        <option value="{{ $status }}"
+                            {{ old('status', $shipment->status) == $status ? 'selected' : '' }}>
+                            {{ $status }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group">
@@ -96,33 +121,21 @@
                 @endif
 
                 <label for="client_id">Client ID</label>
-                <input type="number" name="client_id" value="{{ old('client_id') }}" min="0" required>
-            </div>
-
-            <div class="form-group">
-                <label>Status</label>
-                <select name="status" required>
-                    @foreach (\App\Models\Shipment::ALLOWED_STATUSES as $status)
-                        <option value="{{ $status }}" {{ old('status') == $status ? 'selected' : '' }}>
-                            {{ $status }}
-                        </option>
-                    @endforeach
-                </select>
+                <input type="number" name="client_id" value="{{ old('client_id', $shipment->client_id) }}" min="0"
+                    required>
             </div>
 
             <div class="form-group">
                 <label for="documents">Documents</label>
-                <input type="file" name="documents[]" multiple required>
+                <input type="file" name="documents[]" multiple>
             </div>
-
 
             <div class="form-group">
                 <label>Details</label>
-                <textarea name="details">{{ old('details') }}</textarea>
+                <textarea name="details">{{ old('details', $shipment->details) }}</textarea>
             </div>
 
-            <button type="submit">Create Shipment</button>
-
+            <button type="submit">Update Shipment</button>
         </form>
     </div>
 @endsection

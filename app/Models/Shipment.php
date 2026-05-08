@@ -32,6 +32,7 @@ class Shipment extends Model
         'status',
         'user_id',
         'details',
+        'client_id',
     ];
 
     public static function booted()

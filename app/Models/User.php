@@ -13,6 +13,16 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    const ROLE_CLIENT = 'client';
+    const ROLE_ADMINISTRATOR = 'administrator';
+    const ROLE_TRUCKER = 'trucker';
+
+    const ALLOWED_ROLES = [
+        self::ROLE_CLIENT,
+        self::ROLE_ADMINISTRATOR,
+        self::ROLE_TRUCKER,
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -22,6 +32,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -45,5 +56,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function setRoleAttribute(string $role)
+    {
+        if (! in_array($role, self::ALLOWED_ROLES)) {
+            throw new \Exception('Invalid role!');
+        }
+
+        $this->attributes['role'] = $role;
     }
 }

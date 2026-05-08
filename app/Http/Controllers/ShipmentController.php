@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\NewShipmentRequest;
 use App\Models\ShipmentDocuments;
 use App\Traits\ImageUploadTrait;
+use App\Http\Requests\UpdateShipmentRequest;
+use Illuminate\Support\Facades\Gate;
 
 class ShipmentController extends Controller
 {
@@ -28,6 +30,8 @@ class ShipmentController extends Controller
      */
     public function create()
     {
+        Gate::authorize('canViewCreationPage', Shipment::class);
+
         return view('shipments.create');
     }
 
@@ -36,6 +40,8 @@ class ShipmentController extends Controller
      */
     public function store(NewShipmentRequest $request)
     {
+        Gate::authorize('create', Shipment::class);
+        
         $shipment = Shipment::create($request->validated());
 
         $fileTypes = [
@@ -89,15 +95,17 @@ class ShipmentController extends Controller
      */
     public function edit(Shipment $shipment)
     {
-        //
+        return view('shipments.edit', compact('shipment'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Shipment $shipment)
+    public function update(UpdateShipmentRequest $request, Shipment $shipment)
     {
-        //
+        $shipment->update($request->validated());
+
+        return redirect()->back();
     }
 
     /**
