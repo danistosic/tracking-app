@@ -98,6 +98,21 @@
                 Posted by User ID: {{ $shipment->user_id ?? 'N/A' }}
             </div>
 
+            <form method="POST" action="{{ route('shipments.assignUser', ['shipment' => $shipment->id]) }}"
+                style="margin-top:15px;">
+                @csrf
+
+                <select name="user_id">
+                    <option selected disabled>None</option>
+
+                    @foreach (\App\Models\User::all() as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+
+                <button type="submit">Assigned</button>
+            </form>
+
             <div class="info" style="margin-top:15px;">
                 <span class="label">Documents:</span>
 

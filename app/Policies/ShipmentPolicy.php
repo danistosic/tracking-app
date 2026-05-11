@@ -15,6 +15,11 @@ class ShipmentPolicy
         return $user->role === User::ROLE_ADMINISTRATOR;
     }
 
+    public function canViewEdit(User $user): bool
+    {
+        return $user->role === User::ROLE_ADMINISTRATOR;
+    }
+
     /**
      * Determine whether the user can create shipments.
      */
@@ -36,7 +41,7 @@ class ShipmentPolicy
      */
     public function view(User $user, Shipment $shipment): bool
     {
-        return false;
+        return $user->role === User::ROLE_ADMINISTRATOR || $shipment->client_id === $user->id;
     }
 
     /**

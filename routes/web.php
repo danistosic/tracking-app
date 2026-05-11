@@ -15,3 +15,6 @@ Route::get('/login-as-admin', function () {
 });
 
 Route::resource('shipments', ShipmentController::class);
+
+Route::post('/shipments/{shipment}/assign-user', [ShipmentController::class, 'assignUser'])
+    ->name('shipments.assignUser');

@@ -10,6 +10,7 @@ use App\Models\ShipmentDocuments;
 use App\Traits\ImageUploadTrait;
 use App\Http\Requests\UpdateShipmentRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\RedirectResponse;
 
 class ShipmentController extends Controller
 {
@@ -87,6 +88,8 @@ class ShipmentController extends Controller
      */
     public function show(Shipment $shipment)
     {
+        Gate::authorize('view', $shipment);
+
         return view('shipments.show', compact('shipment'));
     }
 
@@ -95,6 +98,8 @@ class ShipmentController extends Controller
      */
     public function edit(Shipment $shipment)
     {
+        Gate::authorize('canViewEdit', Shipment::class);
+
         return view('shipments.edit', compact('shipment'));
     }
 
@@ -114,5 +119,18 @@ class ShipmentController extends Controller
     public function destroy(Shipment $shipment)
     {
         //
+    }
+
+    public function assignUser(Request $request, Shipment $shipment): RedirectResponse
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $shipment->user_id = $request->user_id;
+        $shipment->status = Shipment::STATUS_IN_PROGRESS;
+        $shipment->save();
+
+        return redirect()->back();
     }
 }
